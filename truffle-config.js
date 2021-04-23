@@ -22,7 +22,7 @@
  const HDWalletProvider = require('@truffle/hdwallet-provider');
  const Web3 = require('web3');
  const web3 = new Web3();
- const mnemonicPhrase = "";
+ const mnemonicPhrase = '';
  const infuraKey = 'fj4jll3k.....';
 
 module.exports = {
@@ -98,12 +98,9 @@ module.exports = {
               },
               providerOrUrl: "https://dai.poa.network",
             }),
-            gas: 5000000,
-            gasPrice: 10000000000,
+          gas: 12087782,
+          gasPrice: 1000000000,
           network_id: 100,
-          networkCheckTimeout: 1000000000,
-          confirmations: 5,
-          timeoutBlocks: 900
     	}
     },
 
@@ -120,7 +117,7 @@ module.exports = {
             settings: { // See the solidity docs for advice about optimization and evmVersion
                 optimizer: {
                     enabled: true,
-                    runs: 200,
+                    runs: 100,
                 },
                 evmVersion: 'istanbul',
             },
