@@ -20,8 +20,14 @@ module.exports = async function(deployer, network, accounts) {
 
         await deployer.deploy(BActions, BFactory.address);
     } else if (network == 'kovan-fork' || network == 'kovan') {
-        deployer.deploy(BActions, '0x8f7F78080219d4066A8036ccD30D588B416a40DB');
+        deployer.deploy(BActions, '0xf5fc5042d8424619BB318bAeDd0f0F1A591f2a3A');
+    } else if (network == 'sokol') {
+        deployer.deploy(BActions, '0x3B4261a0A617a01ff7994bD15896ab1d384baABF');
     } else if (network == 'xdai') {
-        deployer.deploy(BActions, '0x79378FFCbD94a5cd5819Cef1C64345d772D2A373');
+        deployer.deploy(BActions, '0xD21B8c3F9F3b2487F65e199fB1ea1753412d16A8');
+    } else if (network == 'alfajores') {
+        deployer.deploy(BActions, '0x07Fa70d4560663E64b44a217AD40a926Dc5BdA5c');
+    } else if (network == 'celo') {
+        deployer.deploy(BActions, '0x6C2e59C3cCB1d81c0eC9Fb9d4d6a3CC3488Fd71c');
     }
 }
