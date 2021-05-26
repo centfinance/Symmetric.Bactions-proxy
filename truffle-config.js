@@ -20,10 +20,18 @@
 
  require('dotenv').config();
  const HDWalletProvider = require('@truffle/hdwallet-provider');
+ const ContractKit = require('@celo/contractkit')
+ 
  const Web3 = require('web3');
+ const web3_alfajores = new Web3(process.env.ALFAJORES_REST_URL);
+ const web3_celo = new Web3(process.env.CELO_REST_URL);
  const web3 = new Web3();
- const mnemonicPhrase = '';
- const infuraKey = 'fj4jll3k.....';
+ 
+ const mnemonicPhrase = process.env.MNEMONIC;
+ const privateKey = process.env.PRIVATEKEY;
+ const kit = ContractKit.newKitFromWeb3(web3_alfajores) // Change to Celo web3 for main net deployment
+ const account = web3_alfajores.eth.accounts.privateKeyToAccount(privateKey)
+ kit.connection.addAccount(account.privateKey);
 
 module.exports = {
     /**
@@ -51,76 +59,99 @@ module.exports = {
             gasPrice: 0x01,
         },
         homestead: {
-            provider: () =>
-              new HDWalletProvider({
-                mnemonic: {
-                  phrase: mnemonicPhrase
-                },
-                providerOrUrl: `https://mainnet.infura.io/v3/${infuraKey}`,
-      //          numberOfAddresses: 1,
-      //          shareNonce: true,
-      //          derivationPath: "m/44'/1'/0'/0/"
-                derivationPath: "m/44'/60'/0'/0/"
-              }),
-            gas: 10000000,
-            gasPrice: web3.utils.toWei('46', 'gwei'),
-            network_id: 1,
-        },
-        kovan: {
-            provider: () =>
-              new HDWalletProvider({
-                mnemonic: {
-                  phrase: mnemonicPhrase
-                },
-                providerOrUrl: `https://kovan.infura.io/v3/${infuraKey}`,
-              }),
-              gas: 10000000,
-              gasPrice: web3.utils.toWei('46', 'gwei'),
-              network_id: 42,
-        },
-        sokol: {
-            provider: () =>
-              new HDWalletProvider({
-                mnemonic: {
-                  phrase: mnemonicPhrase
-                },
-                providerOrUrl: "https://sokol.poa.network",
-              }),
-              gas: 10000000,
-              gasPrice: 5000000000,
-              network_id: 77,
-        },
-        xdai: {
-            provider: () =>
+          provider: () =>
             new HDWalletProvider({
               mnemonic: {
                 phrase: mnemonicPhrase
               },
-              providerOrUrl: "https://dai.poa.network",
+              providerOrUrl: web3,
+    //          numberOfAddresses: 1,
+    //          shareNonce: true,
+    //          derivationPath: "m/44'/1'/0'/0/"
+              derivationPath: "m/44'/60'/0'/0/"
             }),
-          gas: 12087782,
-          gasPrice: 1000000000,
-          network_id: 100,
-    	}
+          gas: 10000000,
+          gasPrice: web3.utils.toWei('46', 'gwei'),
+          network_id: 1,
+      },
+      kovan: {
+          provider: () =>
+            new HDWalletProvider({
+              mnemonic: {
+                phrase: mnemonicPhrase
+              },
+              providerOrUrl: ``,
+            }),
+            gas: 10000000,
+            gasPrice: web3.utils.toWei('46', 'gwei'),
+            network_id: 42,
+      },
+      sokol: {
+          provider: () =>
+            new HDWalletProvider({
+              mnemonic: {
+                phrase: mnemonicPhrase
+              },
+              providerOrUrl: ``,
+            }),
+            gas: 10000000,
+            gasPrice: 5000000000,
+            network_id: 77,
+      },
+      xdai: {
+        provider: () =>
+        new HDWalletProvider({
+          mnemonic: {
+            phrase: mnemonicPhrase
+          },
+          providerOrUrl: "https://dai.poa.network",
+        }),
+        gas: 5000000,
+        gasPrice: 10000000000,
+      network_id: 100,
+      networkCheckTimeout: 1000000000,
+      confirmations: 5,
+      timeoutBlocks: 900
     },
+    catalyst: {
+        provider: () =>
+        new HDWalletProvider({
+          mnemonic: {
+            phrase: mnemonicPhrase
+          },
+          providerOrUrl: web3,
+        }),
+      gas: 12087782,
+      gasPrice: 1000000000,
+      network_id: 10000,
+    },
+    alfajores: {
+      provider: kit.connection.web3.currentProvider, // CeloProvider
+      network_id: 44787                              // Alfajores Celo test netowrk network id
+    },
+    celo: {
+      provider: kit.connection.web3.currentProvider, // CeloProvider
+      network_id: 42220                              // Alfajores Celo test netowrk network id
+    }
+  },
 
-    // Set default mocha options here, use special reporters etc.
-    mocha: {
-    // timeout: 100000
-    },
+  // Set default mocha options here, use special reporters etc.
+  mocha: {
+  // timeout: 100000
+  },
 
-    // Configure your compilers
-    compilers: {
-        solc: {
-            version: '0.6.12',
-            // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-            settings: { // See the solidity docs for advice about optimization and evmVersion
-                optimizer: {
-                    enabled: true,
-                    runs: 100,
-                },
-                evmVersion: 'istanbul',
-            },
-        },
-    },
+  // Configure your compilers
+  compilers: {
+      solc: {
+          version: '0.6.12',
+          // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
+          settings: { // See the solidity docs for advice about optimization and evmVersion
+              optimizer: {
+                  enabled: true,
+                  runs: 100,
+              },
+              evmVersion: 'istanbul',
+          },
+      },
+  },
 };
